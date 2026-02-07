@@ -49,11 +49,13 @@ export const DiscoBackdrop = () => {
 
     // Disco ball state
     let ballRotation = 0;
-    const ballX = canvas.width / 2;
-    const ballY = canvas.height / 3;
     const ballRadius = 40;
 
     const animate = () => {
+      // Recalculate ball position dynamically (handles resize)
+      const ballX = canvas.width / 2;
+      const ballY = canvas.height / 6;
+
       // Clear canvas with semi-transparent background for trail effect
       ctx.fillStyle = "rgba(0, 0, 0, 0.95)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);

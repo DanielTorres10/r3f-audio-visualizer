@@ -7,6 +7,9 @@ import { APPLICATION_MODE } from "@/lib/applicationModes";
 import { useValentineState, useAppStateActions } from "@/lib/appState";
 import AudioAnalyzer from "@/components/analyzers/audioAnalyzer";
 import { useValentineAudioContext } from "@/context/valentineAudio";
+import ValentineControls from "@/components/audio/ValentineControls";
+import useVisualizerCycle from "@/hooks/useVisualizerCycle";
+import usePaletteCycle from "@/hooks/usePaletteCycle";
 
 export const ValentineApp = ({
   harryStylesAudioPath = "/r3f-audio-visualizer/audio/hs.mp3",
@@ -48,6 +51,17 @@ export const ValentineApp = ({
     // Set audio URL in context - ValentineAudioPlayer will handle playback
     setAudioUrl(harryStylesAudioPath);
   };
+
+  // Cycle through visualizers based on hardcoded schedule
+  useVisualizerCycle(
+    currentPhase === "visual-journey" || currentPhase === "complete"
+  );
+
+  // Cycle through color palettes every 15 seconds during visual journey
+  usePaletteCycle(
+    currentPhase === "visual-journey" || currentPhase === "complete",
+    15
+  );
 
   return (
     <main className="relative h-[100dvh] w-[100dvw] bg-black overflow-hidden">

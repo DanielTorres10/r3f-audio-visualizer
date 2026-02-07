@@ -52,14 +52,9 @@ export const ProposalScreen = ({ onComplete }: ProposalScreenProps) => {
             Cecilia, will you be my valentine?
           </h1>
 
-          {/* Buttons container */}
-          <div className="relative h-40 flex items-center justify-center">
-            {/* YesButton - centered */}
-            <div className="absolute">
-              <YesButton onYesClick={handleYesClick} />
-            </div>
-
-            {/* NoButton - positioned via its own logic */}
+          {/* Buttons container - side by side */}
+          <div className="flex gap-8 items-center justify-center">
+            <YesButton onYesClick={handleYesClick} />
             <NoButton />
           </div>
 

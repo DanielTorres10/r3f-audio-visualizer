@@ -50,6 +50,13 @@ const Visual3DCanvas = () => {
       event.preventDefault();
       setContextLost(true);
       console.warn("[WebGL] Context lost - stopping render");
+      // Check memory status if available
+      if ((performance as any).memory) {
+        const mem = (performance as any).memory;
+        console.log(
+          `[WebGL] Memory: ${(mem.usedJSHeapSize / 1048576).toFixed(1)}MB / ${(mem.jsHeapSizeLimit / 1048576).toFixed(1)}MB`
+        );
+      }
     };
 
     const handleContextRestored = () => {

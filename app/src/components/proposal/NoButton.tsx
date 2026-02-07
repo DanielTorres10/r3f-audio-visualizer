@@ -41,31 +41,71 @@ export const NoButton = () => {
     return distance < MIN_BUFFER;
   };
 
-  const getRandomPosition = () => {
-    const padding = 60;
+  const getSmallMovement = (currentX: number, currentY: number): Position => {
+    const padding = 20;
     const buttonWidth = 100;
     const buttonHeight = 50;
+    const moveDistance = 150; // Medium movement radius for hover
 
-    let newX: number, newY: number;
-    let attempts = 0;
-    const maxAttempts = 20;
+    // Calculate safe boundaries
+    const maxX = Math.max(padding, window.innerWidth - buttonWidth - padding);
+    const maxY = Math.max(padding, window.innerHeight - buttonHeight - padding);
 
-    do {
-      newX = Math.random() * (window.innerWidth - buttonWidth - padding * 2) + padding;
-      newY = Math.random() * (window.innerHeight - buttonHeight - padding * 2) + padding;
-      attempts++;
-    } while (
-      isPointTooClose(newX + buttonWidth / 2, newY + buttonHeight / 2, getYesButtonBounds()) &&
-      attempts < maxAttempts
-    );
+    // Move in a radius around current position
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * moveDistance;
+    
+    let newX = currentX + Math.cos(angle) * distance;
+    let newY = currentY + Math.sin(angle) * distance;
+
+    // Clamp to viewport bounds
+    newX = Math.max(padding, Math.min(newX, maxX));
+    newY = Math.max(padding, Math.min(newY, maxY));
 
     return { x: newX, y: newY };
+  };
+
+  const getLargeMovement = (currentX: number, currentY: number): Position => {
+    const padding = 20;
+    const buttonWidth = 100;
+    const buttonHeight = 50;
+    const moveDistance = 400; // Large movement radius for click
+
+    // Calculate safe boundaries
+    const maxX = Math.max(padding, window.innerWidth - buttonWidth - padding);
+    const maxY = Math.max(padding, window.innerHeight - buttonHeight - padding);
+
+    // Move in a larger radius around current position
+    const angle = Math.random() * Math.PI * 2;
+    const distance = Math.random() * moveDistance;
+    
+    let newX = currentX + Math.cos(angle) * distance;
+    let newY = currentY + Math.sin(angle) * distance;
+
+    // Clamp to viewport bounds
+    newX = Math.max(padding, Math.min(newX, maxX));
+    newY = Math.max(padding, Math.min(newY, maxY));
+
+    return { x: newX, y: newY };
+  };
+
+  const getInitialPosition = (): Position => {
+    const yesButton = document.querySelector("[data-testid='yes-button']");
+    
+    if (yesButton) {
+      const rect = yesButton.getBoundingClientRect();
+      // Start button 120px to the right of yes button
+      return { x: rect.right + 30, y: rect.top + rect.height / 2 - 25 };
+    }
+
+    // Fallback if yes button not found
+    return { x: window.innerWidth / 2 + 150, y: window.innerHeight / 2 };
   };
 
   const handleMouseEnter = () => {
     if (isMobile) return;
     
-    const newPos = getRandomPosition();
+    const newPos = getSmallMovement(position.x, position.y);
     setPosition(newPos);
     incrementNoAttempts();
   };
@@ -76,7 +116,7 @@ export const NoButton = () => {
     }
 
     // For touch, move button on direct touch attempt
-    const newPos = getRandomPosition();
+    const newPos = getSmallMovement(position.x, position.y);
     setPosition(newPos);
     incrementNoAttempts();
 
@@ -88,21 +128,23 @@ export const NoButton = () => {
     e.preventDefault();
     
     if (!isMobile) {
-      const newPos = getRandomPosition();
+      const newPos = getLargeMovement(position.x, position.y);
       setPosition(newPos);
       incrementNoAttempts();
     }
   };
 
-  // Initialize position
+  // Initialize position next to yes button
   useEffect(() => {
-    setPosition(getRandomPosition());
+    const initialPos = getInitialPosition();
+    setPosition(initialPos);
   }, []);
 
   // Recalculate if window resizes
   useEffect(() => {
     const handleResize = () => {
-      setPosition(getRandomPosition());
+      const initialPos = getInitialPosition();
+      setPosition(initialPos);
     };
 
     window.addEventListener("resize", handleResize);
