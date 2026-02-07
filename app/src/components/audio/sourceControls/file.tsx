@@ -72,16 +72,19 @@ const FileAudioPlayer = ({ audio }: AudioSourceControlsProps) => {
         console.log("[FileAudioPlayer] Audio ended");
       };
 
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
+
       audio.addEventListener("canplay", handleCanPlay);
       audio.addEventListener("ended", handleEnded);
-      audio.addEventListener("play", () => setIsPlaying(true));
-      audio.addEventListener("pause", () => setIsPlaying(false));
+      audio.addEventListener("play", handlePlay);
+      audio.addEventListener("pause", handlePause);
 
       return () => {
         audio.removeEventListener("canplay", handleCanPlay);
         audio.removeEventListener("ended", handleEnded);
-        audio.removeEventListener("play", () => setIsPlaying(true));
-        audio.removeEventListener("pause", () => setIsPlaying(false));
+        audio.removeEventListener("play", handlePlay);
+        audio.removeEventListener("pause", handlePause);
       };
     }, [audio]);
 

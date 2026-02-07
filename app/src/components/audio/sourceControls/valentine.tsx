@@ -16,6 +16,7 @@ const ValentineAudioPlayer = ({ audio }: AudioSourceControlsProps) => {
       if (!audioUrl) {
         if (audio.src) {
           audio.pause();
+          audio.src = "";
           setIsPlaying(false);
         }
         return;
@@ -35,6 +36,14 @@ const ValentineAudioPlayer = ({ audio }: AudioSourceControlsProps) => {
             setIsPlaying(false);
           });
       }
+
+      return () => {
+        // Cleanup on unmount
+        if (audio) {
+          audio.pause();
+          audio.src = "";
+        }
+      };
     }, [audioUrl, audio]);
 
     // Track playback state

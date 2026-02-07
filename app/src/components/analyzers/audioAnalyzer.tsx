@@ -149,11 +149,16 @@ const ValentineAnalyzer = ({
     }
   }, [mode]);
 
-  // Store audio in window for discovery by ValentineApp
+  // Store audio in window for discovery by ValentineApp - with cleanup
   useEffect(() => {
     if (audio) {
       (window as any).__valentineAudio = audio;
     }
+    
+    return () => {
+      // Clean up on unmount
+      delete (window as any).__valentineAudio;
+    };
   }, [audio]);
 
   return (

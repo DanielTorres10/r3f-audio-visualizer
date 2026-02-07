@@ -70,21 +70,8 @@ export const ValentineApp = ({
           </div>
 
           {/* Timed Text Reveals */}
-          <TimedReveals imageUrl="/r3f-audio-visualizer/images/harry-styles-together.png" />
+          { <TimedReveals imageUrl="/r3f-audio-visualizer/images/harry-styles-together.png" /> }
 
-          {/* Phase Complete Message */}
-          {currentPhase === "complete" && (
-            <div className="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
-              <div className="text-center">
-                <h2 className="text-5xl font-black text-pink-400 mb-4">
-                  💕 Thank you, Cecilia! 💕
-                </h2>
-                <p className="text-2xl text-purple-300">
-                  See you in October at Madison Square Garden
-                </p>
-              </div>
-            </div>
-          )}
         </>
       )}
     </main>
