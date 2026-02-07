@@ -70,7 +70,10 @@ export const ValentineApp = ({
           </div>
 
           {/* Timed Text Reveals */}
-          { <TimedReveals imageUrl="/r3f-audio-visualizer/images/harry-styles-together.png" /> }
+          <TimedReveals imageUrl="/r3f-audio-visualizer/images/harry-styles-together.png" />
+
+          {/* Audio Controls (Valentine) */}
+          <ValentineControls />
 
         </>
       )}
