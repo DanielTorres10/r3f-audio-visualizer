@@ -2,14 +2,10 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import useTimedReveal from "@/hooks/useTimedReveal";
 import useLetterReveal from "@/hooks/useLetterReveal";
 
-const dateTimeRevealTime = 30; // seconds
-const locationRevealTime = 60; // seconds
-const eventRevealTime = 121;
-
 export const DateReveal = () => {
-  const isVisible = useTimedReveal(dateTimeRevealTime); // 10 seconds
+  const isVisible = useTimedReveal(286); // 286 seconds
   const dateText = "October 21, 2026";
-  const revealedText = useLetterReveal(dateTimeRevealTime, dateText, 17);
+  const revealedText = useLetterReveal(286, dateText, 12);
 
   return (
     <div
@@ -28,7 +24,7 @@ export const DateReveal = () => {
             0 0 20px rgba(138, 43, 226, 0.3)
           `,
           letterSpacing: "0.02em",
-          minHeight: "80px", // Prevent layout shift
+          minHeight: "80px",
         }}
       >
         {revealedText}
@@ -38,9 +34,9 @@ export const DateReveal = () => {
 };
 
 export const LocationReveal = () => {
-  const isVisible = useTimedReveal(locationRevealTime); // 15 seconds
+  const isVisible = useTimedReveal(290); // 290 seconds
   const locationText = "New York: Madison Square Garden";
-  const revealedText = useLetterReveal(locationRevealTime, locationText, 17);
+  const revealedText = useLetterReveal(290, locationText, 12);
 
   return (
     <div
@@ -68,15 +64,14 @@ export const LocationReveal = () => {
 };
 
 export const EventReveal = ({ imageUrl }: { imageUrl?: string }) => {
-  const isVisible = useTimedReveal(eventRevealTime); // Text appears at 121 seconds
+  const isVisible = useTimedReveal(294); // 294 seconds
   const eventText = "Harry Styles: TOGETHER, TOGETHER";
-  const revealedText = useLetterReveal(eventRevealTime, eventText, 15); // Reveal over 15 seconds
-  const imageVisible = useTimedReveal(eventRevealTime + 15); // Image appears after text finishes (121 + 15)
+  const revealedText = useLetterReveal(294, eventText, 12);
+  const imageVisible = useTimedReveal(306); // 294 + 12 = 306 seconds
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const imageRef = useRef<HTMLImageElement>(null);
-  const globalListenersRef = useRef<(() => void)[]>([]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent<HTMLImageElement>) => {
     e.preventDefault();
@@ -93,7 +88,6 @@ export const EventReveal = ({ imageUrl }: { imageUrl?: string }) => {
     const newX = e.clientX - dragStart.x;
     const newY = e.clientY - dragStart.y;
     
-    // Limit dragging boundaries (optional)
     const maxOffset = 200;
     const boundedX = Math.max(-maxOffset, Math.min(maxOffset, newX));
     const boundedY = Math.max(-maxOffset, Math.min(maxOffset, newY));
@@ -108,7 +102,6 @@ export const EventReveal = ({ imageUrl }: { imageUrl?: string }) => {
     setIsDragging(false);
   }, []);
 
-  // Add global mouse up listener for better drag handling
   useEffect(() => {
     if (!isDragging) return;
 
@@ -136,20 +129,13 @@ export const EventReveal = ({ imageUrl }: { imageUrl?: string }) => {
     window.addEventListener('mousemove', handleGlobalMouseMove);
     window.addEventListener('mouseleave', handleGlobalMouseUp);
 
-    // Store cleanup functions
-    globalListenersRef.current.push(() => {
+    return () => {
       window.removeEventListener('mouseup', handleGlobalMouseUp);
       window.removeEventListener('mousemove', handleGlobalMouseMove);
       window.removeEventListener('mouseleave', handleGlobalMouseUp);
-    });
-
-    return () => {
-      globalListenersRef.current.forEach(fn => fn());
-      globalListenersRef.current = [];
     };
   }, [isDragging, dragStart]);
 
-  // Reset drag position when image becomes invisible
   useEffect(() => {
     if (!imageVisible && (dragOffset.x !== 0 || dragOffset.y !== 0)) {
       setDragOffset({ x: 0, y: 0 });
@@ -168,7 +154,6 @@ export const EventReveal = ({ imageUrl }: { imageUrl?: string }) => {
       }}
     >
       <div className="mt-6 text-center">
-        {/* Event title */}
         <div
           className="text-3xl md:text-5xl font-black text-transparent bg-clip-text
           bg-gradient-to-r from-yellow-300 via-pink-400 to-purple-500 mb-4"
@@ -184,7 +169,6 @@ export const EventReveal = ({ imageUrl }: { imageUrl?: string }) => {
           {revealedText}
         </div>
 
-        {/* Concert image (if provided) */}
         {imageUrl && imageVisible && (
           <div className="mt-6 flex justify-center pointer-events-auto">
             <img
@@ -217,7 +201,6 @@ export const EventReveal = ({ imageUrl }: { imageUrl?: string }) => {
 export const TimedReveals = ({ imageUrl }: { imageUrl?: string }) => {
   const styleInjectedRef = useRef(false);
 
-  // Inject styles only once on mount
   useEffect(() => {
     if (styleInjectedRef.current) return;
     styleInjectedRef.current = true;

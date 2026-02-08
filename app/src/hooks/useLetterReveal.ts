@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 
 const useLetterReveal = (triggerTime: number, text: string, revealDuration: number) => {
   const [revealedLength, setRevealedLength] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const animationRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isMountedRef = useRef(true);
 
   useEffect(() => {
@@ -11,47 +11,68 @@ const useLetterReveal = (triggerTime: number, text: string, revealDuration: numb
     
     return () => {
       isMountedRef.current = false;
-      if (timerRef.current) clearTimeout(timerRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
+      if (animationRef.current) clearInterval(animationRef.current);
     };
   }, []);
 
   useEffect(() => {
-    // Clear any existing timers
-    if (timerRef.current) clearTimeout(timerRef.current);
     if (intervalRef.current) clearInterval(intervalRef.current);
+    if (animationRef.current) clearInterval(animationRef.current);
     
-    // Reset revealed length
     setRevealedLength(0);
 
-    // Start revealing after triggerTime
-    timerRef.current = setTimeout(() => {
+    const checkAndUpdate = () => {
       if (!isMountedRef.current) return;
       
-      const lettersPerInterval = Math.max(1, Math.floor(text.length / (revealDuration * 10)));
-      let currentLength = 0;
-      
-      intervalRef.current = setInterval(() => {
-        if (!isMountedRef.current) return;
-        
-        currentLength += lettersPerInterval;
-        if (currentLength >= text.length) {
-          currentLength = text.length;
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-          }
-        }
-        
-        setRevealedLength(currentLength);
-      }, 100); // Update every 100ms for smooth reveal
-    }, triggerTime * 1000);
+      const audioElement = (window as any).__valentineAudio as HTMLAudioElement;
+      if (!audioElement || !audioElement.currentTime) {
+        return;
+      }
 
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      const currentTime = audioElement.currentTime;
+      
+      if (currentTime < triggerTime) {
+        setRevealedLength(0);
+        return;
+      }
+
+      const timeSinceTrigger = currentTime - triggerTime;
+      const progress = Math.min(timeSinceTrigger / revealDuration, 1);
+      const targetLength = Math.floor(progress * text.length);
+      
+      if (targetLength > revealedLength) {
+        // Animate to target length
+        if (animationRef.current) clearInterval(animationRef.current);
+        
+        animationRef.current = setInterval(() => {
+          if (!isMountedRef.current) return;
+          
+          setRevealedLength(prev => {
+            if (prev >= targetLength) {
+              if (animationRef.current) {
+                clearInterval(animationRef.current);
+                animationRef.current = null;
+              }
+              return targetLength;
+            }
+            return prev + 1;
+          });
+        }, 50);
+      }
     };
-  }, [triggerTime, text, revealDuration]);
+
+    // Check immediately
+    checkAndUpdate();
+    
+    // Set up interval
+    intervalRef.current = setInterval(checkAndUpdate, 100);
+    
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (animationRef.current) clearInterval(animationRef.current);
+    };
+  }, [triggerTime, revealDuration, text]);
 
   return text.substring(0, revealedLength);
 };
