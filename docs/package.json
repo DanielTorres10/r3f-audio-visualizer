@@ -1,6 +1,6 @@
 {
   "name": "r3f-audio-visualizer",
-  "homepage": "https://dcyoung.github.io/r3f-audio-visualizer/",
+  "homepage": "https://danieltorres10.github.io/r3f-audio-visualizer/",
   "version": "0.2.0",
   "private": true,
   "scripts": {
@@ -12,7 +12,10 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --check \"**/*.{js,cjs,mjs,ts,tsx,md,json}\"",
-    "format:fix": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\""
+    "format:fix": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\"",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "deploy-docs": "npm run build && gh-pages -d docs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.1",
@@ -61,7 +64,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "gh-pages": "^6.2.0",
+    "gh-pages": "^6.3.0",
     "jiti": "^2.6.1",
     "postcss": "^8.5.6",
     "prettier": "^3.8.1",

@@ -2,18 +2,86 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/r3f-audio-visualizer/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="An interactive audio visualizer." />
-    <link rel="apple-touch-icon" href="/logo180.png" />
-    <link rel="manifest" href="/manifest.json" />
-
-    <title>For Ceci</title>
+    <meta name="description" content="An interactive audio visualizer for Cecilia" />
+    <link rel="apple-touch-icon" href="/r3f-audio-visualizer/logo180.png" />
+    <link rel="manifest" href="/r3f-audio-visualizer/manifest.json" />
+    
+    <title>For Ceci 💕</title>
+    
+    <!-- Critical CSS -->
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      #root {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+      .loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 18px;
+        text-align: center;
+      }
+      .loading:after {
+        content: '...';
+        animation: dots 1.5s steps(4, end) infinite;
+      }
+      @keyframes dots {
+        0%, 20% { content: '.'; }
+        40% { content: '..'; }
+        60%, 100% { content: '...'; }
+      }
+    </style>
   </head>
 
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>
+      <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; color: white; display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <div style="text-align: center; padding: 20px; max-width: 400px;">
+          <h1 style="color: #ff69b4;">JavaScript Required</h1>
+          <p>This interactive experience requires JavaScript to work properly.</p>
+          <p>Please enable JavaScript in your browser settings.</p>
+        </div>
+      </div>
+    </noscript>
+    
+    <div id="loading" class="loading">
+      Loading interactive experience
+    </div>
+    
     <div id="root"></div>
+    
+    <script>
+      // Hide loading when app loads
+      window.addEventListener('load', function() {
+        const loading = document.getElementById('loading');
+        if (loading) {
+          loading.style.display = 'none';
+        }
+      });
+      
+      // GitHub Pages SPA fallback
+      (function() {
+        const redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.pathname) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    
+    <!-- Vite will replace this -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
