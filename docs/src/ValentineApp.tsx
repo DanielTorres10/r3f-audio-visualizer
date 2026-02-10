@@ -12,7 +12,7 @@ import useVisualizerCycle from "@/hooks/useVisualizerCycle";
 import { ControlsPanel } from "./components/controls/main";
 
 export const ValentineApp = ({
-  harryStylesAudioPath = "/r3f-audio-visualizer/audio/hs.mp3",
+  harryStylesAudioPath = "/audio/hs.mp3",
 }) => {
   const { currentPhase } = useValentineState();
   const { setMode, initValentineMode } = useAppStateActions();
@@ -73,7 +73,7 @@ export const ValentineApp = ({
           <AudioAnalyzer mode={APPLICATION_MODE.AUDIO} />
 
           {/* Timed Text Reveals */}
-          <TimedReveals imageUrl="/r3f-audio-visualizer/images/harry-styles-together.png" />
+          <TimedReveals imageUrl="/images/harry-styles-together.png" />
 
           {/* Audio Controls (Valentine) */}
           <ValentineControls />
