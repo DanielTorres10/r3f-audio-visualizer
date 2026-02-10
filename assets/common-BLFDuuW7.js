@@ -1,0 +1,1 @@
+import{j as e}from"./three-CtZvvRdE.js";import{L as l,e as n}from"./index-CZU_MQQD.js";const m=({label:s,value:t,className:r,...a})=>e.jsxs("div",{className:n("flex w-full items-center justify-between",r),...a,children:[e.jsx(l,{children:s}),e.jsx("span",{className:"w-12 px-2 py-0.5 text-right text-sm text-muted-foreground",children:t})]});export{m as V};

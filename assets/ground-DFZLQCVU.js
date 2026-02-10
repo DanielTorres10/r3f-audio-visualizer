@@ -1,0 +1,1 @@
+import{j as r,ab as t}from"./three-CtZvvRdE.js";const h=({size:e=250,...s})=>r.jsxs("mesh",{...s,children:[r.jsx("planeGeometry",{args:[e,e]}),r.jsx(t,{mirror:1,blur:[500,100],resolution:1024,mixBlur:12,mixStrength:1.5,roughness:1,depthScale:1.2,minDepthThreshold:.4,maxDepthThreshold:1.4})]});export{h as G};

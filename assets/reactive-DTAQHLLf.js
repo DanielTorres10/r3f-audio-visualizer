@@ -1,4 +1,4 @@
-import{r as a,u as b,l as m,V as h,h as g,a as w,j as r}from"./three-DoDmUXEH.js";import{u as y,C as z}from"./index-DTAMNN3q.js";const j=`
+import{r as a,u as b,l as m,V as h,h as g,a as w,j as r}from"./three-CtZvvRdE.js";import{u as y,C as z}from"./index-CZU_MQQD.js";const j=`
 precision mediump float;
 uniform vec3 color;
 
